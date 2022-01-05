@@ -18,22 +18,39 @@
 
         <div id="add-button">+</div>
 
-        <div id="add-book-modal">
-            <form id="add-book-form">
-                <span id="close-button">&times;</span>
+    </main>
+
+        <div id="add-book-modal" class="book-modal">
+            <form id="add-book-form" class="book-form">
+                <span class="close-button">&times;</span>
                 <h2>Add New Book</h2>
-                <input type="text" class="input" id="title" placeholder="Title" required />
-                <input type="text" class="input" id="author" placeholder="Author" required />
-                <input type="number" class="input" id="total-pages" placeholder="Total Pages" required />
+                <input type="text" class="input" id="add-title" placeholder="Title" required />
+                <input type="text" class="input" id="add-author" placeholder="Author" required />
+                <input type="number" class="input" id="add-completed-pages" placeholder="Completed Pages" required />
+                <input type="number" class="input" id="add-total-pages" placeholder="Total Pages" required />
                 <div class="is-read-container">
                     <label for="is-read">Finished reading? </label>
-                    <input type="checkbox" class="input" id="is-read" />
+                    <input type="checkbox" class="input" id="add-is-read" />
                 </div>
                 <button type="submit" class="submit-button" id="submit-button">Add New Book</button>
             </form>
         </div>
 
-    </main>
+        <div id="edit-book-modal" class="book-modal">
+            <form id="edit-book-form" class="book-form">
+                <span class="close-button">&times;</span>
+                <h2>Edit Book</h2>
+                <input type="text" class="input" id="edit-title" required />
+                <input type="text" class="input" id="edit-author" required />
+                <input type="number" class="input" id="edit-completed-pages" required />
+                <input type="number" class="input" id="edit-total-pages" required />
+                <div class="is-read-container">
+                    <label for="is-read">Finished reading? </label>
+                    <input type="checkbox" class="input" id="edit-is-read" />
+                </div>
+                <button type="submit" class="submit-button" id="save-button">Save Changes</button>
+            </form>
+        </div>
 
     <script src="script.js"></script>
 

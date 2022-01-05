@@ -1,10 +1,11 @@
 :root {
-    --primary-light: #e5e5e5;
     --blueberry: #6B7A8F;
+    --blueberry-light: #ced7e2;
     --apricot: #F7882F;
     --citrus: #F7C331;
     --apple-core: #DCC7AA;
     --mud: #cc8805;
+    --light-grey: #e5e5e5;
 }
 
 body {
@@ -21,7 +22,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
+    padding: 0 10px 0 10px;
     margin-bottom: 20px;
 }
 
@@ -39,42 +40,82 @@ header > h1 {
     align-items: center;
     flex-wrap: wrap;
     font-size: 20px;
-    max-width: 1400px;
 }
 
 .book-card {
+    min-width: 25vw;
+    max-width: 50vw;
     gap: 5px;
     padding: 10px;
     margin: 10px;
     background-color: #ffffff;
-    border: 1px solid #ffffff;
+    border: 2px solid var(--blueberry);
     border-radius: 5px;
     box-shadow: 3px 3px 10px grey;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
+    word-break: break-all;
 }
 
 .book-card > h3 {
     font-size: 24px;
+    margin: 5px;
+}
+.book-card > h4 {
+    font-size: 20px;
+    font-style: italic;
+    margin: 5px;
+}
+.book-card > h5 {
+    font-size: 16px;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: -15px;
 }
 
-.book-card > p {
+.book-pages-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.book-pages-container > p {
     font-size: 16px;
 }
 
-.book-card > button {
+.book-button-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: -10px;
+}
+.book-button-container > button {
     border: 0px;
-    border-radius: 20px;
-    padding: 3px;
-    gap: 5px;
+    border-radius: 5px;
+    margin: 0 1px 0 1px;
     font-size: 16px;
+    flex: 0 0 32%
 }
-.book-card > button:hover {
+.book-button-container  > button:hover {
     cursor: pointer;
     filter: brightness(90%);
+}
+.increment-button {
+    background-color: var(--light-grey);
+}
+
+.edit-button {
+    border: none;
+    background-color: transparent;
+    font-size: 12px;
+    align-self: flex-end;
+    margin-bottom: -10px;
+}
+.edit-button:hover {
+    cursor: pointer;
+    color: var(--apricot);
+    transition-duration: .2s;
 }
 
 /* UI */
@@ -90,9 +131,8 @@ header > h1 {
     border-radius: 40px;
     z-index: 1;
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-
+    bottom: 1vh;
+    right: 1vh;
 }
 #add-button:hover {
     cursor: pointer;
@@ -103,9 +143,9 @@ header > h1 {
 
 
 /* ADD BOOK MODAL */
-#add-book-modal {
-    display: none;
+.book-modal {
     position: fixed;
+    display: none;
     z-index: 2;
     left: 0;
     top: 0;
@@ -115,7 +155,7 @@ header > h1 {
     background-color: rgb(0,0,0,0.4)
 }
 
-#add-book-form {
+.book-form {
     display: flex;
     flex-flow: column;
     align-items:stretch;
@@ -127,22 +167,22 @@ header > h1 {
     border-radius: 5px;
     max-width: 60%;
 }
-#add-book-form > h2 {
+.book-form > h2 {
     text-align: center;
     margin-top: 0;
     font-size: 32px;
 }
-#add-book-form > input, label, button {
+.book-form > input, label, button {
     font-size: 20px;
 }
 
-#close-button {
+.close-button {
     align-self: flex-end;
     font-size: 28px;
     font-weight: bold;
     margin-bottom: -20px;
 }
-#close-button:hover {
+.close-button:hover {
     cursor: pointer;
 }
 

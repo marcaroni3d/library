@@ -1,22 +1,21 @@
 # Virtual Library
 
-First version of a virtual library.
+Version 1.1 of the virtual library project.
 
 [Live Demo](https://marcaroni3d.github.io/library/)
 
-## Features
+## New Updates:
+- Various "Book Card" fixes
+    - New layout
+    - Fixed text wrapping
+    - Standardized card width. Height is responsive to contents.
+    - Book cards change color if read
+- New user input "Completed Pages" that is compared to "Total Pages"
+    - Can increment completed page count up/down on "Book Card"
+- Can now edit books after creation
 
-- Basic pop-up interface for user to add books to their virtual library
-- Books contain details including title, author, page count, and whether or not the book has been read
-- User can toggle the "read" status of books after creation.
-- NO STORAGE in current version
-
-## Planned Updates:
-
-- Fix card sizing
-- Add additional inputs:
-    - "currently reading" switchable status
-    - new input "completed pages" to compare to "total pages"
+### Planned Updates:
+- User input validation
 - Local storage
 - User Interface
     - Stats such as total books, number of books read, total pages, number of pages read
