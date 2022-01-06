@@ -5,7 +5,7 @@ class Book {
         author = 'Unknown',
         completedPages = '0',
         totalPages = '0',
-        isRead = false
+        isRead = false,
     ) {
         this.title = title
         this.author = author
@@ -26,9 +26,13 @@ class Library {
         }
     }
 
+    removeBook(title) {
+        this.books = this.books.filter((book) => book.title !== title)
+    }
+
     editBook(newBook) {        
         let oldBook = this.books.find(book => book.title === oldBookTitle)
-        Object.assign(oldBook, newBook)
+        //Object.assign(oldBook, newBook)
     }
 
     isInLibrary(newBook) {
@@ -38,10 +42,7 @@ class Library {
     findBook(title) {
         return this.books.find((book) => book.title === title)
     }
-
-    removeBook(title) {
-        this.books = this.books.filter((book) => book.title !== title)
-    }
+    
 }
 
 const library = new Library()
@@ -54,24 +55,28 @@ const addBookForm = document.getElementById("add-book-form")
 const editBookModal = document.getElementById("edit-book-modal")
 const editBookForm = document.getElementById("edit-book-form")
 const closeButtons = document.querySelectorAll(".close-button")
+const deleteButton = document.getElementById("delete-button")
 
 addButton.addEventListener('click', openAddBookModal)
-closeButtons.forEach(button => { button.addEventListener('click', closeBookModals)})
 addBookForm.addEventListener('submit', addBook)
 editBookForm.addEventListener('submit', editBook)
+closeButtons.forEach(button => { button.addEventListener('click', closeBookModals)})
+deleteButton.addEventListener('click', removeBook)
 
 // ADD BOOK MODAL
 function openAddBookModal() {
     addBookForm.reset()
     addBookModal.style.display = "block"   
-}
+} 
 
 function addBook(e) {
     e.preventDefault()
     const newBook = getBookFromInput()
-    library.addBook(newBook)
-    closeBookModals()
-    updateLibrary()
+    if (validateForm(newBook)) {
+        library.addBook(newBook)
+        closeBookModals()
+        updateLibrary()
+    }
 }
 
 function getBookFromInput() {
@@ -87,8 +92,8 @@ function getBookFromInput() {
 // EDIT BOOK MODAL
 function openEditBookModal(e) {
     editBookForm.reset()
-    
-    oldBookTitle = e.target.parentNode.childNodes[1].innerHTML  // global declaration, for use in Library.editBook
+
+    oldBookTitle = e.target.parentNode.firstChild.innerHTML  // global declaration, for use in Library.editBook
     const book = library.findBook(oldBookTitle)
 
     const editTitle = document.getElementById('edit-title')
@@ -101,18 +106,19 @@ function openEditBookModal(e) {
     editAuthor.value = book.author
     editCompletedPages.value = book.completedPages
     editTotalPages.value = book.totalPages
-    editIsRead.value = book.isRead
-    console.log(editIsRead.value)
+    editIsRead.checked = book.isRead
 
     editBookModal.style.display = "block"
 }
 
 function editBook(e) {
     e.preventDefault()
-    const newBook = editBookFromInput()
-    library.editBook(newBook)
-    closeBookModals()
-    updateLibrary()
+    const newBook = editBookFromInput() 
+    if (validateForm(newBook)) {
+        library.editBook(newBook)
+        closeBookModals()
+        updateLibrary()
+    }
 }
 
 function editBookFromInput() {
@@ -123,6 +129,65 @@ function editBookFromInput() {
     const isRead = document.getElementById('edit-is-read').checked
 
     return new Book(title, author, completedPages, totalPages, isRead)
+}
+
+// MODAL FORM VALIDATION
+function validateForm(newBook) {
+    const title = newBook.title
+    const author = newBook.author
+    const completedPages = parseInt(newBook.completedPages)
+    const totalPages = parseInt(newBook.totalPages)
+
+    if (completedPages === totalPages) {
+        newBook.isRead = true
+    }
+
+    if ((library.isInLibrary(newBook)) && (addBookModal.offsetParent != null)) {    // does not apply to Edit Book Modal
+        displayError("That title is already in your library")
+        return false
+    } else if (title.length <= 0) {
+        displayError("Please enter a title")
+        return false
+    } else if (author.length <= 0) {
+        displayError("Please enter an author")
+        return false
+    } else if (title.length > 50) {
+        displayError("Title may not be more than 50 characters")
+        return false
+    } else if (author.length > 50) {
+        displayError("Author may not be more than 50 characters")
+        return false
+    } else if (completedPages <= 0 || completedPages > 1,000,000) {
+        displayError("Value must be between 0 and 1,000,000")
+        return false
+    } else if (completedPages > totalPages) {
+        displayError("Completed pages cannot exceed total pages")
+        return false
+    } else if (totalPages <= 0 || totalPages > 1,000,000) {
+        displayError("Value must be between 0 and 1,000,000")
+        return false
+    } else {
+        return true
+    }
+}
+
+function displayError(msg) {
+    const bookCard = document.querySelector(".book-form")
+    const errorBox = document.createElement('div')
+    errorBox.className = "error"
+    errorBox.innerHTML = msg
+
+    if (document.body.contains(errorBox)) {
+        window.clearTimeout(errorTimeout)
+    } else {
+        bookCard.appendChild(errorBox)
+    }
+    
+    let errorTimeout = window.setTimeout(function() {
+        errorBox.parentNode.removeChild(errorBox);
+        errorTimeout = -1;
+    }, 2000)
+    
 }
 
 // UI & MODAL SUPPORT
@@ -136,9 +201,9 @@ function closeBookModals() {
         }
     }
 
-function removeBook(e) {
-    const title = e.target.parentNode.parendNode.firstChild.innerHTML
-    library.removeBook(title)
+function removeBook() {
+    library.removeBook(oldBookTitle)
+    closeBookModals()
     updateLibrary()
 }
 
@@ -162,7 +227,6 @@ function checkIfEmptyLibrary() {
 
 function createBookCard(book) {
     const bookCard = document.createElement('div')
-        const editButton = document.createElement('button')
         const title = document.createElement('h3')
         const author = document.createElement('h4')
         const pageText = document.createElement('h5')
@@ -170,46 +234,35 @@ function createBookCard(book) {
             const completedPages = document.createElement('p')
             const pagesBreak = document.createElement('p')
             const totalPages = document.createElement('p')
-        const buttonContainer = document.createElement('div')
-            const pageDownButton = document.createElement('button')
-            const isReadButton = document.createElement('button')
-            const pageUpButton = document.createElement('button')
-
-    editButton.classList.add('edit-button')
-    bookCard.classList.add('book-card')
-    pagesContainer.classList.add('book-pages-container')
-    buttonContainer.classList.add('book-button-container')
-    pageDownButton.classList.add('increment-button')
-    pageUpButton.classList.add('increment-button')
-
-    pageDownButton.onclick = decrementPageCount
-    pageUpButton.onclick = incrementPageCount
+        const isReadButton = document.createElement('button')
+        const editButton = document.createElement('button')
+        
     isReadButton.onclick = toggleRead
     editButton.onclick = openEditBookModal
 
-    editButton.textContent = "edit"
+    bookCard.classList.add('book-card')
+    pagesContainer.classList.add('book-pages-container')
+    
     title.textContent = `${book.title}`
     author.textContent = book.author
     pageText.textContent = "Pages Read:"
     completedPages.textContent = `${book.completedPages}`
     pagesBreak.textContent = " / "
     totalPages.textContent = `${book.totalPages}`
-    pageDownButton.textContent = "-"
-    pageUpButton.textContent = "+"
+    editButton.textContent = "Edit"
 
     if (book.isRead) {
-        isReadButton.textContent = "✓"
+        isReadButton.textContent = "Read"
         isReadButton.style.backgroundColor = "var(--blueberry)"
         bookCard.style.backgroundColor = "var(--blueberry-light)"
         bookCard.style.transition = "0.3s"
     } else {
-        isReadButton.textContent = "X"
+        isReadButton.textContent = "Not Read"
         isReadButton.style.backgroundColor = "var(--citrus)"
         bookCard.style.backgroundColor = "#ffffff"
         bookCard.style.transition = "0.3s"
     }
 
-    bookCard.appendChild(editButton)
     bookCard.appendChild(title)
     bookCard.appendChild(author)
     bookCard.appendChild(pageText)
@@ -217,42 +270,16 @@ function createBookCard(book) {
     pagesContainer.appendChild(completedPages)
     pagesContainer.appendChild(pagesBreak)
     pagesContainer.appendChild(totalPages)
-    bookCard.appendChild(buttonContainer)
-    buttonContainer.appendChild(pageDownButton)
-    buttonContainer.appendChild(isReadButton)
-    buttonContainer.appendChild(pageUpButton)
+    bookCard.appendChild(editButton)
+    bookCard.appendChild(isReadButton)
     libraryContainer.appendChild(bookCard)
 }
 
 function toggleRead(e) {
-    const title = e.target.parentNode.parentNode.childNodes[1].innerHTML
+    const title = e.target.parentNode.firstChild.innerHTML
     const book = library.findBook(title)
     book.isRead = !book.isRead
-    console.log(book.isRead.value)
     updateLibrary()
-}
-
-function decrementPageCount(e) {
-    const title = e.target.parentNode.parentNode.childNodes[1].innerHTML
-    const book = library.findBook(title)
-    let pageCount = parseInt(e.target.parentNode.parentNode.childNodes[4].firstChild.innerHTML)
-    if (pageCount > 0) {
-        pageCount--
-        book.completedPages = pageCount
-        updateLibrary()
-    } 
-}
-
-function incrementPageCount(e) {
-    const title = e.target.parentNode.parentNode.childNodes[1].innerHTML
-    const book = library.findBook(title)
-    let pageCount = parseInt(e.target.parentNode.parentNode.childNodes[4].firstChild.innerHTML)
-    let totalPages = parseInt(e.target.parentNode.parentNode.childNodes[4].childNodes[2].innerHTML)
-    if (pageCount < totalPages) {
-        pageCount++
-        book.completedPages = pageCount
-        updateLibrary()
-    }
 }
 
 // INIT
