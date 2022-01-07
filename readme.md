@@ -1,6 +1,6 @@
 # Virtual Library
 
-Version 1.3 of the virtual library project.
+Version 1.31 of the virtual library project.
 
 [Live Demo](https://marcaroni3d.github.io/library/)
 
@@ -9,6 +9,7 @@ Version 1.3 of the virtual library project.
 - Page Counts are given default values if there is no user input
 - Fixed a bug where error messages wouldn't show on Edit Book form
 - Added a confirm prompt when the Delete button is pressed
+- Add/Edit book forms now remove leading 0's from page inputs
 
 ### Future Updates:
 - Expanded User Interface
