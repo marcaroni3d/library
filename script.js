@@ -4,7 +4,7 @@ class Book {
         title = 'Unknown',
         author = 'Unknown',
         completedPages = '0',
-        totalPages = '0',
+        totalPages = '1',
         isRead = false,
     ) {
         this.title = title
@@ -32,7 +32,7 @@ class Library {
 
     editBook(newBook) {        
         let oldBook = this.books.find(book => book.title === oldBookTitle)
-        //Object.assign(oldBook, newBook)
+        Object.assign(oldBook, newBook)
     }
 
     isInLibrary(newBook) {
@@ -66,7 +66,8 @@ deleteButton.addEventListener('click', removeBook)
 // ADD BOOK MODAL
 function openAddBookModal() {
     addBookForm.reset()
-    addBookModal.style.display = "block"   
+    addBookModal.style.display = "block"
+    addBookForm.classList.add('active-form')   
 } 
 
 function addBook(e) {
@@ -75,6 +76,7 @@ function addBook(e) {
     if (validateForm(newBook)) {
         library.addBook(newBook)
         closeBookModals()
+        saveLocal()
         updateLibrary()
     }
 }
@@ -82,9 +84,16 @@ function addBook(e) {
 function getBookFromInput() {
     const title = document.getElementById('add-title').value
     const author = document.getElementById('add-author').value
-    const completedPages = document.getElementById('add-completed-pages').value
-    const totalPages = document.getElementById('add-total-pages').value
+    let completedPages = document.getElementById('add-completed-pages').value
+    let totalPages = document.getElementById('add-total-pages').value
     const isRead = document.getElementById('add-is-read').checked
+
+    if (completedPages.length == 0) {
+        completedPages = 0
+    }
+    if (totalPages.length == 0) {
+        totalPages = 1
+    }
 
     return new Book(title, author, completedPages, totalPages, isRead)
 }
@@ -93,7 +102,7 @@ function getBookFromInput() {
 function openEditBookModal(e) {
     editBookForm.reset()
 
-    oldBookTitle = e.target.parentNode.firstChild.innerHTML  // global declaration, for use in Library.editBook
+    oldBookTitle = e.target.parentNode.firstChild.innerHTML  // global declaration, for reference in Library.editBook
     const book = library.findBook(oldBookTitle)
 
     const editTitle = document.getElementById('edit-title')
@@ -108,6 +117,7 @@ function openEditBookModal(e) {
     editTotalPages.value = book.totalPages
     editIsRead.checked = book.isRead
 
+    editBookForm.classList.add('active-form')
     editBookModal.style.display = "block"
 }
 
@@ -117,6 +127,7 @@ function editBook(e) {
     if (validateForm(newBook)) {
         library.editBook(newBook)
         closeBookModals()
+        saveLocal()
         updateLibrary()
     }
 }
@@ -124,9 +135,16 @@ function editBook(e) {
 function editBookFromInput() {
     const title = document.getElementById('edit-title').value
     const author = document.getElementById('edit-author').value
-    const completedPages = document.getElementById('edit-completed-pages').value
-    const totalPages = document.getElementById('edit-total-pages').value
+    let completedPages = document.getElementById('edit-completed-pages').value
+    let totalPages = document.getElementById('edit-total-pages').value
     const isRead = document.getElementById('edit-is-read').checked
+
+    if (completedPages.length == 0) {
+        completedPages = 0
+    }
+    if (totalPages.length == 0) {
+        totalPages = 1
+    }
 
     return new Book(title, author, completedPages, totalPages, isRead)
 }
@@ -135,8 +153,8 @@ function editBookFromInput() {
 function validateForm(newBook) {
     const title = newBook.title
     const author = newBook.author
-    const completedPages = parseInt(newBook.completedPages)
-    const totalPages = parseInt(newBook.totalPages)
+    const completedPages = newBook.completedPages
+    const totalPages = newBook.totalPages
 
     if (completedPages === totalPages) {
         newBook.isRead = true
@@ -157,14 +175,14 @@ function validateForm(newBook) {
     } else if (author.length > 50) {
         displayError("Author may not be more than 50 characters")
         return false
-    } else if (completedPages <= 0 || completedPages > 1,000,000) {
-        displayError("Value must be between 0 and 1,000,000")
+    } else if (completedPages < 0 || completedPages > 1000000) {
+        displayError("Completed Pages must be between 0 and 1,000,000")
         return false
     } else if (completedPages > totalPages) {
-        displayError("Completed pages cannot exceed total pages")
+        displayError("Completed Pages cannot exceed Total Pages")
         return false
-    } else if (totalPages <= 0 || totalPages > 1,000,000) {
-        displayError("Value must be between 0 and 1,000,000")
+    } else if (totalPages < 1 || totalPages > 1000000) {
+        displayError("Total Pages must be between 1 and 1,000,000")
         return false
     } else {
         return true
@@ -172,7 +190,7 @@ function validateForm(newBook) {
 }
 
 function displayError(msg) {
-    const bookCard = document.querySelector(".book-form")
+    const bookCard = document.querySelector(".active-form")
     const errorBox = document.createElement('div')
     errorBox.className = "error"
     errorBox.innerHTML = msg
@@ -193,7 +211,9 @@ function displayError(msg) {
 // UI & MODAL SUPPORT
 function closeBookModals() {
     addBookModal.style.display = "none"
+    addBookForm.classList.remove('active-form')
     editBookModal.style.display = "none"
+    editBookForm.classList.remove('active-form')
 }
     window.onclick = (e) => {   // close modal if click outside container
         if (e.target == addBookModal || e.target == editBookModal) {
@@ -202,8 +222,10 @@ function closeBookModals() {
     }
 
 function removeBook() {
+    confirm("Are you sure you want to remove this book from your library?")
     library.removeBook(oldBookTitle)
     closeBookModals()
+    saveLocal()
     updateLibrary()
 }
 
@@ -279,8 +301,28 @@ function toggleRead(e) {
     const title = e.target.parentNode.firstChild.innerHTML
     const book = library.findBook(title)
     book.isRead = !book.isRead
+    saveLocal()
     updateLibrary()
 }
 
+// LOCAL STORAGE
+function saveLocal() {
+    localStorage.setItem('library', JSON.stringify(library))
+}
+
+function restoreLocal() {
+    const localLibrary = JSON.parse(localStorage.getItem('library'))
+    if (localLibrary) {
+        library.books = localLibrary.books.map((book) => JSONToBook(book))
+    } else {
+        library.books = []
+    } 
+    updateLibrary()
+}
+
+function JSONToBook(book) {
+    return new Book(book.title, book.author, book.completedPages, book.totalPages, book.isRead)
+}
+
 // INIT
-window.onload = checkIfEmptyLibrary()
+window.onload = restoreLocal(), checkIfEmptyLibrary()
