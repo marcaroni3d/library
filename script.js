@@ -84,14 +84,14 @@ function addBook(e) {
 function getBookFromInput() {
     const title = document.getElementById('add-title').value
     const author = document.getElementById('add-author').value
-    let completedPages = document.getElementById('add-completed-pages').value
-    let totalPages = document.getElementById('add-total-pages').value
+    let completedPages = parseInt(document.getElementById('add-completed-pages').value)
+    let totalPages = parseInt(document.getElementById('add-total-pages').value)
     const isRead = document.getElementById('add-is-read').checked
 
-    if (completedPages.length == 0) {
+    if (isNaN(completedPages)) {
         completedPages = 0
     }
-    if (totalPages.length == 0) {
+    if (isNaN(totalPages)) {
         totalPages = 1
     }
 
@@ -135,14 +135,14 @@ function editBook(e) {
 function editBookFromInput() {
     const title = document.getElementById('edit-title').value
     const author = document.getElementById('edit-author').value
-    let completedPages = document.getElementById('edit-completed-pages').value
-    let totalPages = document.getElementById('edit-total-pages').value
+    let completedPages = parseInt(document.getElementById('edit-completed-pages').value)
+    let totalPages = parseInt(document.getElementById('edit-total-pages').value)
     const isRead = document.getElementById('edit-is-read').checked
 
-    if (completedPages.length == 0) {
+    if (isNaN(completedPages)) {
         completedPages = 0
     }
-    if (totalPages.length == 0) {
+    if (isNaN(totalPages)) {
         totalPages = 1
     }
 
