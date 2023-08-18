@@ -9,11 +9,15 @@ Library.prototype = {
             this.books.push(item)
         }
     },
-    removeFromLibrary: function(book) {
-        this.books.pop(book)
+    removeFromLibrary: function(title) {
+        this.books = this.books.filter(book => book.title !== title)
     },
-    findBook : function(title) {
-        return this.books.find((book) => book.title === title)
+    editInLibrary: function(newBook) {
+        let oldBook = this.books.find(book => book.title === oldBookTitle)
+        Object.assign(oldBook, newBook)
+    },
+    findInLibrary : function(title) {
+        return this.books.find(book => book.title === title)
     }
 }
 
@@ -36,29 +40,49 @@ const addBookCancelButton = document.getElementById('cancel-button')
 const editBookModal = document.getElementById('edit-book-modal')
 const editBookForm = document.getElementById('edit-book-form')
 const editBookDeleteButton = document.getElementById('delete-button')
-const modalSubmitButtons = document.querySelectorAll('.submit-button')
 const closeButtons = document.querySelectorAll('.close-button')
 
 addBookButton.onclick = openAddBookModal
-
-modalSubmitButtons.forEach(button => button.addEventListener('click', (e) => {
-    console.log(e)
-}))
-
-closeButtons.forEach(button => button.addEventListener('click', (e) => {
-    closeModal(e)
-}))
-
-function closeModal(e) {
-    e.target.parentElement.parentElement.style.visibility = 'hidden'
-}
+addBookForm.addEventListener('submit', addBook)
+addBookCancelButton.onclick = closeModals
+editBookForm.addEventListener('submit', editBook)
+editBookDeleteButton.onclick = deleteBook
+closeButtons.forEach(button => { button.addEventListener('click', closeModals)})
 
 function openAddBookModal() {
     addBookModal.style.visibility = 'visible'
 }
 
-function openEditBookModal() {
+function openEditBookModal(e) {
+    editBookForm.reset()
+
+    oldBookTitle = e.target.parentNode.firstChild.innerHTML
+    const book = myLibrary.findInLibrary(oldBookTitle)
+
+    const editTitle = document.getElementById('edit-title')
+    const editAuthor = document.getElementById('edit-author')
+    const editCompletedPages = document.getElementById('edit-completed-pages')
+    const editTotalPages = document.getElementById('edit-total-pages')
+    const editIsRead = document.getElementById('edit-is-read')
+
+    editTitle.value = book.title
+    editAuthor.value = book.author
+    editCompletedPages.value = book.completedPages
+    editTotalPages.value = book.totalPages
+    editIsRead.checked = book.isRead
+
     editBookModal.style.visibility = 'visible'
+}
+
+function closeModals() {
+    addBookModal.style.visibility = 'hidden'
+    editBookModal.style.visibility = 'hidden'
+
+    // to do: close modal if click outside form container
+}
+
+function resetLibrary() {
+    libraryContainer.innerHTML = ''
 }
 
 function updateLibrary() {
@@ -68,8 +92,39 @@ function updateLibrary() {
     }
 }
 
-function resetLibrary() {
-    libraryContainer.innerHTML = ''
+function addBook(e) {
+    e.preventDefault()
+    const title = document.getElementById('add-title').value
+    const author = document.getElementById('add-author').value
+    const completedPages = document.getElementById('add-completed-pages').value
+    const totalPages = document.getElementById('add-total-pages').value
+    const isRead = document.getElementById('add-is-read').checked
+    const newBook = new Book(title, author, completedPages, totalPages, isRead)
+
+    myLibrary.addToLibrary(newBook)
+    closeModals()
+    updateLibrary()
+}
+
+function editBook(e) {
+    e.preventDefault()
+    const title = document.getElementById('edit-title').value
+    const author = document.getElementById('edit-author').value
+    const completedPages = document.getElementById('edit-completed-pages').value
+    const totalPages = document.getElementById('edit-total-pages').value
+    const isRead = document.getElementById('edit-is-read').checked
+
+    const newBook = new Book(title, author, completedPages, totalPages, isRead)
+    myLibrary.editInLibrary(newBook)
+    closeModals()
+    updateLibrary()
+}
+
+function deleteBook() {
+    console.log(oldBookTitle)
+    myLibrary.removeFromLibrary(oldBookTitle)
+    closeModals()
+    updateLibrary()
 }
 
 function createBookCard(book) {
@@ -125,19 +180,13 @@ function createBookCard(book) {
 
 function toggleRead(e) {
     const title = e.target.parentNode.firstChild.innerHTML
-    const book = myLibrary.findBook(title)
+    const book = myLibrary.findInLibrary(title)
     console.log(book)
     book.isRead = !book.isRead
     updateLibrary()
 }
 
-function addBook(e) {
-    const title = e.target.parentNode.firstChild.innerHTML
-
-}
-
-
-
+// SAMPLE LIBRARY
 const jurrasicPark = new Book('Jurrasic Park', 'Michael Crichton', '400', '400', true);
 const sherlockHolmes = new Book('Sherlock Holmes', 'Arthur Conan Doyle', '200', '500', false);
 const catsCradle = new Book("Cat's Cradle", 'Kurt Vonnegut', '260', '260', true)
