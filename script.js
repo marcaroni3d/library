@@ -1,5 +1,4 @@
 // OBJECTS
-
 function Library() {
     this.books = []
 }
@@ -70,7 +69,7 @@ function deleteBook() {
     updateLibrary()
 }
 
-function clearModalErrors() {
+function clearErrors() {
     titleError.innerHTML = ''
     authorError.innerHTML = ''
     completedPagesError.innerHTML = ''
@@ -80,13 +79,17 @@ function clearModalErrors() {
 function closeModals() {
     addBookModal.style.visibility = 'hidden'
     editBookModal.style.visibility = 'hidden'
-    // to do: close modal if click outside form container
 }
+    window.addEventListener('click', (e) => {
+        if(e.target.id === 'add-book-modal' || e.target.id === 'edit-book-modal') {
+            closeModals()
+        }
+    })
 
 // ADD BOOK MODAL
 function openAddBookModal() {
     addBookForm.reset()
-    clearModalErrors()
+    clearErrors()
     addBookModal.style.visibility = 'visible'
 }
 
@@ -120,7 +123,7 @@ function addBookFromInput() {
 // EDIT BOOK MODAL
 function openEditBookModal(e) {
     editBookForm.reset()
-    clearModalErrors()
+    clearErrors()
 
     oldBookTitle = e.target.parentNode.firstChild.innerHTML
     const book = myLibrary.findInLibrary(oldBookTitle)
@@ -174,7 +177,7 @@ const completedPagesError = document.querySelector('.completed-pages-error')
 const totalPagesError = document.querySelector('.total-pages-error')
 
 function validateForm(book) {
-    clearModalErrors()
+    clearErrors()
 
     const title = book.title
     const author = book.author
@@ -255,7 +258,7 @@ function createBookCard(book) {
     } else {
         isReadButton.textContent = 'Not Read'
         isReadButton.style.backgroundColor = 'var(--citrus)'
-        bookCard.style.backgroundColor = 'var(--primary-light)'
+        bookCard.style.backgroundColor = 'var(--blueberry-light)'
         bookCard.style.transition = '0.3s'
     }
 
@@ -284,10 +287,8 @@ const sherlockHolmes = new Book('Sherlock Holmes', 'Arthur Conan Doyle', '200', 
 const catsCradle = new Book("Cat's Cradle", 'Kurt Vonnegut', '260', '260', true)
 const theLostWorld = new Book('The Lost World', 'Michael Crichton', '400', '500', false);
 const theStranger = new Book('The Stranger', 'Albert Camus', '150', '150', true);
-const godBlessRosewater = new Book("God Bless You, Mr.Rosewater", 'Kurt Vonnegut', '300', '300', false)  
-const theGreatGatsby = new Book('The Great Gatsby', 'F. Scott Fitzgerald', '350', '350', true);
-const nineStories = new Book("Nine Stories", 'J.D. Salinger', '300', '300', true);
+const theGreatGatsby = new Book('The Great Gatsby', 'F. Scott Fitzgerald', '350', '350', false);
 
-myLibrary.addToLibrary(jurrasicPark, sherlockHolmes, catsCradle, theLostWorld, theStranger, godBlessRosewater, theGreatGatsby, nineStories)
+myLibrary.addToLibrary(jurrasicPark, sherlockHolmes, catsCradle, theLostWorld, theStranger, theGreatGatsby)
 
 updateLibrary()

@@ -5,14 +5,12 @@
 
     --primary-dark: #333333;
     --primary-light: #fefefe;
-    --secondary-light: #ebebeb;
-    
+    --secondary-light: #eeeeee;
+    --parchment: #fbf1da;
     --blueberry: #6B7A8F;
-    --blueberry-light: #ced7e2;
+    --blueberry-light: #d9e2ec;
     --apricot: #F7882F;
     --citrus: #F7C331;
-    --apple-core: #DCC7AA;
-    --mud: #cc8805;
 }
 
 body {
@@ -23,6 +21,7 @@ body {
 header {
     background-color: var(--primary-light);
     padding: 1rem;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 #main-content {
@@ -70,6 +69,7 @@ header {
     padding: 3px;
     margin: 2px;
     cursor: pointer;
+    background-color: var(--secondary-light);
 }
 
 /* MODALS */
@@ -164,6 +164,7 @@ header {
     bottom: 0;
     right: 0;
     margin: 1rem;
+    padding-bottom: .5rem;
     width: 70px;
     height: 70px;
     border: none;
@@ -181,4 +182,5 @@ header {
     transform: scale(1.2);
     transition-duration: .3s;
     filter: brightness(90%);
+    transform: rotate(90deg);
 }
