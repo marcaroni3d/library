@@ -9,12 +9,15 @@ Library.prototype = {
             this.books.push(item)
         }
     },
-    removeFromLibrary: function(title) {
+    removeFromLibrary : function(title) {
         this.books = this.books.filter(book => book.title !== title)
     },
     editInLibrary: function(newBook) {
         let oldBook = this.books.find(book => book.title === oldBookTitle)
         Object.assign(oldBook, newBook)
+    },
+    isInLibrary : function(newBook) {
+        return this.books.some(book => book.title === newBook.title)
     },
     findInLibrary : function(title) {
         return this.books.find(book => book.title === title)
@@ -29,7 +32,7 @@ function Book(title, author, completedPages, totalPages, isRead) {
     this.isRead = isRead
 }
 
-// MAIN 
+// USER INTERFACE 
 const myLibrary = new Library()
 
 const libraryContainer = document.getElementById('library-container')
@@ -49,12 +52,75 @@ editBookForm.addEventListener('submit', editBook)
 editBookDeleteButton.onclick = deleteBook
 closeButtons.forEach(button => { button.addEventListener('click', closeModals)})
 
+// MAIN
+function resetLibrary() {
+    libraryContainer.innerHTML = ''
+}
+
+function updateLibrary() {
+    resetLibrary()
+    for (let book of myLibrary.books) {
+        createBookCard(book)
+    }
+}
+
+function deleteBook() {
+    myLibrary.removeFromLibrary(oldBookTitle)
+    closeModals()
+    updateLibrary()
+}
+
+function clearModalErrors() {
+    titleError.innerHTML = ''
+    authorError.innerHTML = ''
+    completedPagesError.innerHTML = ''
+    totalPagesError.innerHTML = ''
+}
+
+function closeModals() {
+    addBookModal.style.visibility = 'hidden'
+    editBookModal.style.visibility = 'hidden'
+    // to do: close modal if click outside form container
+}
+
+// ADD BOOK MODAL
 function openAddBookModal() {
+    addBookForm.reset()
+    clearModalErrors()
     addBookModal.style.visibility = 'visible'
 }
 
+function addBook(e) {
+    e.preventDefault()
+    const newBook = addBookFromInput()
+    if (validateForm(newBook)) {
+        myLibrary.addToLibrary(newBook)
+        closeModals()
+        updateLibrary()
+    }
+}
+
+function addBookFromInput() {
+    const title = document.getElementById('add-title').value
+    const author = document.getElementById('add-author').value
+    let completedPages = parseInt(document.getElementById('add-completed-pages').value)
+    let totalPages = parseInt(document.getElementById('add-total-pages').value)
+    const isRead = document.getElementById('add-is-read').checked
+
+    if (isNaN(completedPages)) { 
+        completedPages = 0 
+    }
+    if (isNaN(totalPages)) { 
+        totalPages = 1 
+    }
+
+    return new Book(title, author, completedPages, totalPages, isRead)
+}
+
+// EDIT BOOK MODAL
 function openEditBookModal(e) {
     editBookForm.reset()
+    clearModalErrors()
 
     oldBookTitle = e.target.parentNode.firstChild.innerHTML
     const book = myLibrary.findInLibrary(oldBookTitle)
@@ -74,59 +140,87 @@ function openEditBookModal(e) {
     editBookModal.style.visibility = 'visible'
 }
 
-function closeModals() {
-    addBookModal.style.visibility = 'hidden'
-    editBookModal.style.visibility = 'hidden'
-
-    // to do: close modal if click outside form container
+function editBook(e) {
+    e.preventDefault()
+    const newBook = editBookFromInput()
+    if (validateForm(newBook)) {
+        myLibrary.editInLibrary(newBook)
+        closeModals()
+        updateLibrary()
+   } 
 }
 
-function resetLibrary() {
-    libraryContainer.innerHTML = ''
+function editBookFromInput() {
+    const title = document.getElementById('edit-title').value
+    const author = document.getElementById('edit-author').value
+    let completedPages = parseInt(document.getElementById('edit-completed-pages').value)
+    let totalPages = parseInt(document.getElementById('edit-total-pages').value)
+    const isRead = document.getElementById('edit-is-read').checked
+
+    if (isNaN(completedPages)) {
+        completedPages = 0
+    }
+    if (isNaN(totalPages)) {
+        totalPages = 1
+    }
+
+    return new Book(title, author, completedPages, totalPages, isRead)
 }
 
-function updateLibrary() {
-    resetLibrary()
-    for (let book of myLibrary.books) {
-        createBookCard(book)
+// FORM VALIDATION
+const titleError = document.querySelector('.title-error')
+const authorError = document.querySelector('.author-error')
+const completedPagesError = document.querySelector('.completed-pages-error')
+const totalPagesError = document.querySelector('.total-pages-error')
+
+function validateForm(book) {
+    clearModalErrors()
+
+    const title = book.title
+    const author = book.author
+    const completedPages = book.completedPages
+    const totalPages = book.totalPages
+
+    if (completedPages === totalPages) book.isRead = true
+
+    if((myLibrary.isInLibrary(book)) && (addBookModal.style.visibility === 'visible')) {
+        titleError.innerText = "This title is already in your library"
+    }
+
+    if (title.length <= 0) {
+        titleError.innerText = "Please enter a title"
+        return false
+    }
+    if (author.length <= 0) {
+        authorError.innerText = "Please enter an author"
+        return false
+    } 
+    if (title.length > 50) {
+        titleError.innerText = "Title may not be more than 50 characters"
+        return false
+    } 
+    if (author.length > 50) {
+        authorError.innerText = "Author may not be more than 50 characters"
+        return false
+    } 
+    if (completedPages < 0 || completedPages > 1000000) {
+        completedPagesError.innerText = "Completed Pages must be between 0 and 1,000,000"
+        return false
+    } 
+    if (completedPages > totalPages) {
+        completedPagesError.innerText = "Completed Pages cannot exceed Total Pages"
+        return false
+    } 
+    if (totalPages < 1 || totalPages > 1000000) {
+        totalPagesError.innerText = "Total Pages must be between 1 and 1,000,000"
+        return false
+    } 
+    else {
+        return true
     }
 }
 
-function addBook(e) {
-    e.preventDefault()
-    const title = document.getElementById('add-title').value
-    const author = document.getElementById('add-author').value
-    const completedPages = document.getElementById('add-completed-pages').value
-    const totalPages = document.getElementById('add-total-pages').value
-    const isRead = document.getElementById('add-is-read').checked
-    const newBook = new Book(title, author, completedPages, totalPages, isRead)
-
-    myLibrary.addToLibrary(newBook)
-    closeModals()
-    updateLibrary()
-}
-
-function editBook(e) {
-    e.preventDefault()
-    const title = document.getElementById('edit-title').value
-    const author = document.getElementById('edit-author').value
-    const completedPages = document.getElementById('edit-completed-pages').value
-    const totalPages = document.getElementById('edit-total-pages').value
-    const isRead = document.getElementById('edit-is-read').checked
-
-    const newBook = new Book(title, author, completedPages, totalPages, isRead)
-    myLibrary.editInLibrary(newBook)
-    closeModals()
-    updateLibrary()
-}
-
-function deleteBook() {
-    console.log(oldBookTitle)
-    myLibrary.removeFromLibrary(oldBookTitle)
-    closeModals()
-    updateLibrary()
-}
-
+// BOOK CARD
 function createBookCard(book) {
     const bookCard = document.createElement('div')
         const title = document.createElement('h3')
@@ -144,7 +238,6 @@ function createBookCard(book) {
         
     bookCard.className = 'book-card'
     pagesContainer.className = 'pages-container'
-    /* to do: give each a unique id */
 
     title.textContent = `${book.title}`
     author.textContent = `${book.author}`
@@ -181,7 +274,6 @@ function createBookCard(book) {
 function toggleRead(e) {
     const title = e.target.parentNode.firstChild.innerHTML
     const book = myLibrary.findInLibrary(title)
-    console.log(book)
     book.isRead = !book.isRead
     updateLibrary()
 }
@@ -194,9 +286,8 @@ const theLostWorld = new Book('The Lost World', 'Michael Crichton', '400', '500'
 const theStranger = new Book('The Stranger', 'Albert Camus', '150', '150', true);
 const godBlessRosewater = new Book("God Bless You, Mr.Rosewater", 'Kurt Vonnegut', '300', '300', false)  
 const theGreatGatsby = new Book('The Great Gatsby', 'F. Scott Fitzgerald', '350', '350', true);
-const theLionWitchWardobe = new Book('The Lion, The Witch & The Wardrobe', 'C.S. Lewis', '300', '400', false);
-const nineStories = new Book("Nine Stories", 'J.D. Salinger', '300', '300', true)  
+const nineStories = new Book("Nine Stories", 'J.D. Salinger', '300', '300', true);
 
-myLibrary.addToLibrary(jurrasicPark, sherlockHolmes, catsCradle, theLostWorld, theStranger, godBlessRosewater, theGreatGatsby, theLionWitchWardobe, nineStories)
+myLibrary.addToLibrary(jurrasicPark, sherlockHolmes, catsCradle, theLostWorld, theStranger, godBlessRosewater, theGreatGatsby, nineStories)
 
 updateLibrary()
