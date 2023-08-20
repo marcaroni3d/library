@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap');
+
 /* MAIN STYLING */
 * {
     margin: 0;
@@ -11,6 +13,8 @@
     --blueberry-light: #d9e2ec;
     --apricot: #F7882F;
     --citrus: #F7C331;
+
+    font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
 body {
