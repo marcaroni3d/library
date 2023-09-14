@@ -1,39 +1,39 @@
-// OBJECTS
-function Library() {
-    this.books = []
-}
-Library.prototype = {
-    addToLibrary : function() {
+class Library {
+    books = []
+
+    addToLibrary() {
         for (let item of arguments) {
             this.books.push(item)
         }
-    },
-    removeFromLibrary : function(title) {
+    }
+    removeFromLibrary(title) {
         this.books = this.books.filter(book => book.title !== title)
-    },
-    editInLibrary: function(newBook) {
+    }
+    editInLibrary(newBook) {
         let oldBook = this.books.find(book => book.title === oldBookTitle)
         Object.assign(oldBook, newBook)
-    },
-    isInLibrary : function(newBook) {
+    }
+    isInLibrary(newBook) {
         return this.books.some(book => book.title === newBook.title)
-    },
-    findInLibrary : function(title) {
+    }
+    findInLibrary(title) {
         return this.books.find(book => book.title === title)
     }
 }
 
-function Book(title, author, completedPages, totalPages, isRead) {
-    this.title = title
-    this.author = author
-    this.completedPages = completedPages
-    this.totalPages = totalPages
-    this.isRead = isRead
+class Book {
+    constructor(title, author, completedPages, totalPages, isRead) {
+        this.title = title
+        this.author = author
+        this.completedPages = completedPages
+        this.totalPages = totalPages
+        this.isRead = isRead
+    }
 }
 
-// USER INTERFACE 
-const myLibrary = new Library()
+const myLibrary = new Library
 
+// USER INTERFACE 
 const libraryContainer = document.getElementById('library-container')
 const addBookButton = document.getElementById('add-book-button')
 const addBookModal = document.getElementById('add-book-modal')
