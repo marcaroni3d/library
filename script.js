@@ -31,8 +31,10 @@ class Book {
   }
 }
 
+// INIT
 const myLibrary = new Library();
 let oldBookTitle
+
 
 // USER INTERFACE
 const libraryContainer = document.getElementById("library-container");
@@ -46,13 +48,14 @@ const editBookDeleteButton = document.getElementById("delete-button");
 const closeButtons = document.querySelectorAll(".close-button");
 
 addBookButton.onclick = openAddBookModal;
-addBookForm.addEventListener("submit", addBook);
+addBookForm.addEventListener("submit", (e) => addBook(e));
 addBookCancelButton.onclick = closeModals;
-editBookForm.addEventListener("submit", editBook);
+editBookForm.addEventListener("submit", (e) => editBook(e));
 editBookDeleteButton.onclick = deleteBook;
 closeButtons.forEach((button) => {
   button.addEventListener("click", closeModals);
 });
+
 
 // MAIN
 function resetLibrary() {
@@ -60,6 +63,7 @@ function resetLibrary() {
 }
 
 function updateLibrary() {
+  saveLocal()
   resetLibrary();
   for (let book of myLibrary.books) {
     createBookCard(book);
@@ -89,6 +93,7 @@ window.addEventListener("click", (e) => {
   }
 });
 
+
 // ADD BOOK MODAL
 function openAddBookModal() {
   addBookForm.reset();
@@ -101,6 +106,7 @@ function addBook(e) {
   const newBook = addBookFromInput();
   if (validateForm(newBook)) {
     myLibrary.addToLibrary(newBook);
+    saveLocal();
     closeModals();
     updateLibrary();
   }
@@ -124,6 +130,7 @@ function addBookFromInput() {
 
   return new Book(title, author, completedPages, totalPages, isRead);
 }
+
 
 // EDIT BOOK MODAL
 function openEditBookModal(e) {
@@ -153,6 +160,7 @@ function editBook(e) {
   const newBook = editBookFromInput();
   if (validateForm(newBook)) {
     myLibrary.editInLibrary(newBook);
+    saveLocal();
     closeModals();
     updateLibrary();
   }
@@ -176,6 +184,7 @@ function editBookFromInput() {
 
   return new Book(title, author, completedPages, totalPages, isRead);
 }
+
 
 // FORM VALIDATION
 const titleErrorMsg = document.querySelectorAll(".title-error");
@@ -211,6 +220,7 @@ function validateTitle(title) {
     titleErrorMsg.forEach(error => error.innerText = "Title may not be more than 50 characters")
     return false;
   }
+  else return true;
 }
 
 function validateAuthor(author) {
@@ -223,6 +233,7 @@ function validateAuthor(author) {
     authorErrorMsg.forEach(error => error.innerText = "Author may not be more than 50 characters")
     return false;
   }
+  else return true;
 }
 
 function validateCompletedPages(number) {
@@ -237,6 +248,11 @@ function validateCompletedPages(number) {
       "Please enter a number")
     return false
   }
+  if (addCompletedPages > addTotalPages || editCompletedPages > editTotalPages) {
+    completedPagesErrorMsg.forEach(error => error.innerText = "Completed Pages cannot exceed Total Pages")
+    return false;
+  }
+  else return true;
 }
 
 function validateTotalPages(number) {
@@ -244,9 +260,8 @@ function validateTotalPages(number) {
   if (number < 1 || number > 1000000) {
     totalPagesErrorMsg.innerText = "Total Pages must be between 1 and 1,000,000";
     return false;
-  } else {
-    return true;
-  }
+  } 
+  else return true;
 }
 
 function validateForm(book) {
@@ -261,22 +276,20 @@ function validateForm(book) {
   validateAuthor(author)
   validateCompletedPages(completedPages)
   validateTotalPages(totalPages)
-
-  if (completedPages === totalPages) book.isRead = true;
-
+  
   if (
     myLibrary.isInLibrary(book) &&
     addBookModal.style.visibility === "visible"
   ) {
     titleErrorMsg.forEach(error => error.innerText = "This title is already in your library")
+    return false
   }
   
-  if (completedPages > totalPages) {
-    completedPagesErrorMsg.forEach(error => error.innerText = "Completed Pages cannot exceed Total Pages")
-    return false;
-  }
-  
+  if (completedPages === totalPages) book.isRead = true;
+
+  else return true
 }
+
 
 // BOOK CARD
 function createBookCard(book) {
@@ -336,57 +349,28 @@ function toggleRead(e) {
   updateLibrary();
 }
 
-// SAMPLE LIBRARY
-const jurrasicPark = new Book(
-  "Jurrasic Park",
-  "Michael Crichton",
-  "400",
-  "400",
-  true,
-);
-const sherlockHolmes = new Book(
-  "Sherlock Holmes",
-  "Arthur Conan Doyle",
-  "200",
-  "500",
-  false,
-);
-const catsCradle = new Book(
-  "Cat's Cradle",
-  "Kurt Vonnegut",
-  "260",
-  "260",
-  true,
-);
-const theLostWorld = new Book(
-  "The Lost World",
-  "Michael Crichton",
-  "400",
-  "500",
-  false,
-);
-const theStranger = new Book(
-  "The Stranger",
-  "Albert Camus",
-  "150",
-  "150",
-  true,
-);
-const theGreatGatsby = new Book(
-  "The Great Gatsby",
-  "F. Scott Fitzgerald",
-  "350",
-  "350",
-  false,
-);
 
-myLibrary.addToLibrary(
-  jurrasicPark,
-  sherlockHolmes,
-  catsCradle,
-  theLostWorld,
-  theStranger,
-  theGreatGatsby,
-);
+// STORAGE
+const localStorageKey = "library"
 
+const saveLocal = () => {
+  localStorage.setItem(localStorageKey, JSON.stringify(myLibrary.books))
+}
+
+const restoreLocal = () => {
+  const books = JSON.parse(localStorage.getItem(localStorageKey))
+  if (books) {
+    myLibrary.books = books.map((book) => JSONToBook(book))
+  } else {
+    myLibrary.books = []
+  }
+}
+
+const JSONToBook = (book) => {
+  return new Book(book.title, book.author, book.pages, book.isRead)
+}
+
+
+// INIT
+restoreLocal();
 updateLibrary();
