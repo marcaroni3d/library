@@ -1,91 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Library</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <header>
-        <h1>Library</h1>
+      <h1>Library</h1>
     </header>
-    
+
     <div id="library-container"></div>
 
     <button id="add-book-button">+</button>
 
     <div id="add-book-modal" class="modal">
-        <form id="add-book-form" class="form">
-            <span class="close-button">&times;</span>
-            <h2>Add Book</h2>
-            <label for="add-title">Title</label>
-            <input type="text" class="input title" id="add-title" />
-            <div class="error title-error"></div>
+      <form id="add-book-form" class="form">
+        <span class="close-button">&times;</span>
+        <h2>Add Book</h2>
+        
+        <label for="add-title">Title</label>
+        <input type="text" class="input title" name="add-title" id="add-title" />
+        <div class="error title-error"></div>
 
-            <label for="add-author">Author</label>
-            <input type="text" class="input author" id="add-author" />
-            <div class="error author-error"></div>
+        <label for="add-author">Author</label>
+        <input type="text" class="input author" name="add-author" id="add-author" />
+        <div class="error author-error"></div>
 
-            <label for="add-completed-pages">Completed Pages</label>
-            <input type="number" class="input completed-pages" id="add-completed-pages" />
-            <div class="error completed-pages-error"></div>
+        <label for="add-completed-pages">Completed Pages</label>
+        <input
+          type="number"
+          class="input completed-pages"
+          name="add-completed-pages"
+          id="add-completed-pages"
+        />
+        <div class="error completed-pages-error"></div>
 
-            <label for="add-total-pages">Total Pages</label>
-            <input type="number" class="input total-pages" id="add-total-pages" />
-            <div class="error total-pages-error"></div>
+        <label for="add-total-pages">Total Pages</label>
+        <input type="number" class="input total-pages" name="add-total-pages" id="add-total-pages" />
+        <div class="error total-pages-error"></div>
 
-            <div class="is-read-container">
-                <label for="is-read">Finished reading? </label>
-                <input type="checkbox" class="input is-read" id="add-is-read" />
-            </div>
-            <div class="button-container">
-                <button type="button" id="cancel-button" >Cancel</button>
-                <button type="submit" class="submit-button">Add</button>
-            </div>
-        </form>
+        <div class="is-read-container">
+          <label for="is-read">Finished reading? </label>
+          <input type="checkbox" class="input is-read" name="add-is-read" id="add-is-read" />
+        </div>
+        <div class="button-container">
+          <button type="button" id="cancel-button">Cancel</button>
+          <button type="submit" class="submit-button">Add</button>
+        </div>
+      </form>
     </div>
 
     <div id="edit-book-modal" class="modal">
-        <form id="edit-book-form" class="form">
-            <span class="close-button">&times;</span>
-            <h2>Edit Book</h2>
-            <label for="edit-title">Title</label>
-            <input type="text" class="input title" id="edit-title" />
-            <div class="error title-error"></div>
+      <form id="edit-book-form" class="form">
+        <span class="close-button">&times;</span>
+        <h2>Edit Book</h2>
+        <label for="edit-title">Title</label>
+        <input type="text" class="input title" name="edit-title" id="edit-title" />
+        <div class="error title-error"></div>
 
-            <label for="edit-author">Author</label>
-            <input type="text" class="input author" id="edit-author" />
-            <div class="error author-error"></div>
+        <label for="edit-author">Author</label>
+        <input type="text" class="input author" name="edit-author" id="edit-author" />
+        <div class="error author-error"></div>
 
-            <label for="edit-completed-pages">Completed Pages</label>
-            <input type="number" class="input completed-pages" id="edit-completed-pages" />
-            <div class="error completed-pages-error"></div>
+        <label for="edit-completed-pages">Completed Pages</label>
+        <input
+          type="number"
+          class="input completed-pages"
+          name="edit-completed-pages"
+          id="edit-completed-pages"
+        />
+        <div class="error completed-pages-error"></div>
 
-            <label for="edit-total-pages">Total Pages</label>
-            <input type="number" class="input total-pages" id="edit-total-pages" />
-            <div class="error total-pages-error"></div>
+        <label for="edit-total-pages">Total Pages</label>
+        <input type="number" class="input total-pages" name="edit-total-pages" id="edit-total-pages" />
+        <div class="error total-pages-error"></div>
 
-            <div class="is-read-container">
-                <label for="is-read">Finished reading? </label>
-                <input type="checkbox" class="input is-read" id="edit-is-read" />
-            </div>
-            <div class="button-container">
-                <button type="button" id="delete-button" >Delete</button>
-                <button type="submit" class="submit-button">Save</button>
-            </div>
-           
-        </form>
+        <div class="is-read-container">
+          <label for="is-read">Finished reading? </label>
+          <input type="checkbox" class="input is-read" name="edit-is-read" id="edit-is-read" />
+        </div>
+        <div class="button-container">
+          <button type="button" id="delete-button">Delete</button>
+          <button type="submit" class="submit-button">Save</button>
+        </div>
+      </form>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 
-<footer>
+  <footer>
     <p>Created by Marcaroni3d</p>
     <a href="https://github.com/marcaroni3d" target="_blank">
-        <img src="images/github-mark.png" alt="github" id="github-image-link">
+      <img src="images/github-mark.png" alt="github" id="github-image-link" />
     </a>
-</footer>
-
+  </footer>
 </html>

@@ -1,213 +1,210 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@300&display=swap");
 
 /* MAIN STYLING */
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 
-    --primary-dark: #333333;
-    --primary-light: #fefefe;
-    --secondary-light: #eeeeee;
-    --parchment: #fbf1da;
-    --blueberry: #6B7A8F;
-    --blueberry-light: #d9e2ec;
-    --apricot: #F7882F;
-    --citrus: #F7C331;
+  --primary-dark: #333333;
+  --primary-light: #fefefe;
+  --secondary-light: #eeeeee;
+  --parchment: #fbf1da;
+  --blueberry: #6b7a8f;
+  --blueberry-light: #d9e2ec;
+  --apricot: #f7882f;
+  --citrus: #f7c331;
 
-    font-family: 'Roboto', 'Open Sans', sans-serif;
+  font-family: "Roboto", "Open Sans", sans-serif;
 }
 
 body {
-    background-color: var(--secondary-light);
-    color: var(--primary-dark);
-    min-height: 100vh;
+  background-color: var(--secondary-light);
+  color: var(--primary-dark);
+  min-height: 100vh;
 }
 
 header {
-    background-color: var(--primary-light);
-    padding: 1rem;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+  background-color: var(--primary-light);
+  padding: 1rem;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 #main-content {
-    min-height: 90vh;
+  min-height: 90vh;
 }
 
 /*LIBRARY */
 #library-container {
-    height: 90%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
-    grid-gap: 1rem;
-    padding: 2rem;
+  height: 90%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  grid-gap: 1rem;
+  padding: 2rem;
 }
 
 .book-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background-color: var(--primary-light);
-    border: 1px solid var(--primary-dark);
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
-    padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--primary-light);
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
 }
 
 .book-card > h5 {
-    margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
 .pages-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 50%;
-    margin-bottom: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 50%;
+  margin-bottom: 5px;
 }
 
 .book-card > button {
-    border: none;
-    border-radius: 10px;
-    width: 50%;
-    padding: 3px;
-    margin: 2px;
-    cursor: pointer;
-    background-color: var(--secondary-light);
+  border: none;
+  border-radius: 10px;
+  width: 50%;
+  padding: 3px;
+  margin: 2px;
+  cursor: pointer;
+  background-color: var(--secondary-light);
 }
 
 /* MODALS */
 
 #add-book-modal,
 #edit-book-modal {
-    visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.5);
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal {
-    position: absolute;
-    margin: auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    overflow: auto;
-
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  overflow: auto;
 }
 
 .close-button {
-    align-self: flex-end;
-    cursor: pointer;
+  align-self: flex-end;
+  cursor: pointer;
 }
 
 .modal > .form {
-    width: 50%;
-    height: auto;
-    display: flex;
-    flex-flow: column;
-    align-items: stretch;
-    gap: .5rem;
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    max-width: 60%;
-    border: 1px solid var(--primary-dark);
-    background: var(--primary-light);
-    border-radius: 10px;
+  width: 50%;
+  height: auto;
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  max-width: 60%;
+  border: 1px solid var(--primary-dark);
+  background: var(--primary-light);
+  border-radius: 10px;
 }
 
 .form > h2 {
-    grid-column: 1 / 3;
-    text-align: center;
-    margin-bottom: 1rem;
+  grid-column: 1 / 3;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .form > input {
-    line-height: 1.2rem;
+  line-height: 1.2rem;
 }
 
 .is-read-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin: 1rem 0 1rem 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin: 1rem 0 1rem 0;
 }
 
 .error {
-    color: red;
+  color: red;
 }
 
 .button-container {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .button-container > button {
-    padding: 10px;
-    border: 1px solid var(--primary-dark);
-    border-radius: 5px;
-    background-color: var(--secondary-light);
-    cursor: pointer;
+  padding: 10px;
+  border: 1px solid var(--primary-dark);
+  border-radius: 5px;
+  background-color: var(--secondary-light);
+  cursor: pointer;
 }
 
 #delete-button:hover,
 #cancel-button:hover {
-    background-color: var(--apricot);
-    color: var(--primary-light);
+  background-color: var(--apricot);
+  color: var(--primary-light);
 }
 #submit-button:hover {
-    background-color: var(--blueberry);
-    color: var(--primary-light);
+  background-color: var(--blueberry);
+  color: var(--primary-light);
 }
-
 
 /* ADD BOOK BUTTON */
 #add-book-button {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    margin: 1rem;
-    padding-bottom: .3rem;
-    width: 70px;
-    height: 70px;
-    border: none;
-    border-radius: 50%;
-    background: var(--apricot);
-    font-size: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 1rem;
+  width: 70px;
+  height: 70px;
+  border: none;
+  border-radius: 50%;
+  background: var(--apricot);
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 #add-book-button:hover {
-    cursor: pointer;
-    transform: scale(1.2);
-    transition-duration: .3s;
-    filter: brightness(90%);
-    transform: rotate(90deg);
+  cursor: pointer;
+  transform: scale(1.2);
+  transition-duration: 0.3s;
+  filter: brightness(90%);
+  
 }
 
 /* FOOTER */
 footer {
-    margin-top: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    align-self: center;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  align-self: center;
 }
 
 #github-image-link {
-    height: 20px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: all .3s ease;
+  height: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 #github-image-link:hover {
-    transform: scale(1.3);
+  transform: scale(1.3);
 }
